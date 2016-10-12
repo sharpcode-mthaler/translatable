@@ -7,6 +7,7 @@ use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Query\Grammars\SqlServerGrammar;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Facades\DB;
 
 class TranslatableScope implements Scope
 {
