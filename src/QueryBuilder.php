@@ -28,7 +28,7 @@ class QueryBuilder extends Builder
     /**
      * Set the columns to be selected.
      *
-     * @param  array|mixed  $columns
+     * @param  array|mixed $columns
      * @return $this
      */
     public function select($columns = ['*'])
@@ -43,14 +43,14 @@ class QueryBuilder extends Builder
     /**
      * Add a new select column to the query.
      *
-     * @param  array|mixed  $column
+     * @param  array|mixed $column
      * @return $this
      */
     public function addSelect($column)
     {
         $column = $this->qualifyColumns(is_array($column) ? $column : func_get_args());
 
-        $this->columns = array_merge((array) $this->columns, $column);
+        $this->columns = array_merge((array)$this->columns, $column);
 
         return $this;
     }
@@ -63,15 +63,15 @@ class QueryBuilder extends Builder
      */
     protected function qualifyColumns($columns)
     {
-        foreach($columns as &$column) {
-            if(!in_array($column, $this->model->translatableAttributes())) {
+        foreach ($columns as &$column) {
+            if (!in_array($column, $this->model->translatableAttributes())) {
                 continue;
             }
 
             $primary = $this->qualifyTranslationColumn($column);
             $fallback = $this->qualifyTranslationColumn($column, true);
 
-            if($this->model->shouldFallback()) {
+            if ($this->model->shouldFallback()) {
                 $column = new Expression($this->compileIfNull($primary, $fallback, $column));
             } else {
                 $column = $primary;
@@ -84,10 +84,10 @@ class QueryBuilder extends Builder
     /**
      * Add a where clause to the query.
      *
-     * @param  string|\Closure  $column
-     * @param  string  $operator
-     * @param  mixed   $value
-     * @param  string  $boolean
+     * @param  string|\Closure $column
+     * @param  string $operator
+     * @param  mixed $value
+     * @param  string $boolean
      * @return $this
      *
      * @throws \InvalidArgumentException
@@ -104,7 +104,7 @@ class QueryBuilder extends Builder
         // Then we need to check if we are dealing with a translated column and defer
         // to the "whereTranslated" clause in that case. That way the user doesn't
         // need to worry about translated columns and let us handle the details.
-        if(in_array($column, $this->model->translatableAttributes())) {
+        if (in_array($column, $this->model->translatableAttributes())) {
             return $this->whereTranslated($column, $operator, $value, $boolean);
         }
 
@@ -114,10 +114,10 @@ class QueryBuilder extends Builder
     /**
      * Add a where clause to the query and don't modify it for i18n.
      *
-     * @param  string|\Closure  $column
-     * @param  string  $operator
-     * @param  mixed   $value
-     * @param  string  $boolean
+     * @param  string|\Closure $column
+     * @param  string $operator
+     * @param  mixed $value
+     * @param  string $boolean
      * @return $this
      *
      * @throws \InvalidArgumentException
@@ -130,10 +130,10 @@ class QueryBuilder extends Builder
     /**
      * Add a translation where clause to the query.
      *
-     * @param  string|\Closure  $column
-     * @param  string  $operator
-     * @param  mixed   $value
-     * @param  string  $boolean
+     * @param  string|\Closure $column
+     * @param  string $operator
+     * @param  mixed $value
+     * @param  string $boolean
      * @return $this
      *
      * @throws \InvalidArgumentException
@@ -152,7 +152,7 @@ class QueryBuilder extends Builder
         // If the given operator is not found in the list of valid operators we will
         // assume that the developer is just short-cutting the '=' operators and
         // we will set the operators to '=' and set the values appropriately.
-        if (! in_array(strtolower($operator), $this->operators, true)) {
+        if (!in_array(strtolower($operator), $this->operators, true)) {
             list($value, $operator) = [$operator, '='];
         }
 
@@ -174,9 +174,9 @@ class QueryBuilder extends Builder
     /**
      * Add a translation or where clause to the query.
      *
-     * @param  string|array|\Closure  $column
-     * @param  string  $operator
-     * @param  mixed   $value
+     * @param  string|array|\Closure $column
+     * @param  string $operator
+     * @param  mixed $value
      * @return $this
      *
      * @throws \InvalidArgumentException
@@ -208,13 +208,13 @@ class QueryBuilder extends Builder
     /**
      * Add an "order by" clause by translated column to the query.
      *
-     * @param  string  $column
-     * @param  string  $direction
+     * @param  string $column
+     * @param  string $direction
      * @return $this
      */
     public function orderBy($column, $direction = 'asc')
     {
-        if(in_array($column, $this->model->translatableAttributes())) {
+        if (in_array($column, $this->model->translatableAttributes())) {
             return $this->orderByTranslated($column, $direction);
         }
 
@@ -224,8 +224,8 @@ class QueryBuilder extends Builder
     /**
      * Add an "order by" clause by translated column to the query.
      *
-     * @param  string  $column
-     * @param  string  $direction
+     * @param  string $column
+     * @param  string $direction
      * @return $this
      */
     public function orderByTranslated($column, $direction = 'asc')
@@ -252,7 +252,7 @@ class QueryBuilder extends Builder
         $alias = $this->model->getI18nTable();
         $fallback = $fallback ? '_fallback' : '';
 
-        if(Str::contains($column, '.')) {
+        if (Str::contains($column, '.')) {
             list($table, $field) = explode('.', $column);
             $suffix = $this->model->getTranslationTableSuffix();
 
@@ -292,4 +292,21 @@ class QueryBuilder extends Builder
 
         return $query->setModel($this->model);
     }
+
+    /**
+     * Replace the "order by" clause of the current query.
+     *
+     * @param  string $column
+     * @param  string $direction
+     * @return \Illuminate\Database\Query\Builder|static
+     */
+    public function reOrderBy($column, $direction = 'asc')
+    {
+        $this->orders = null;
+
+        if (!is_null($column)) return $this->orderBy($column, $direction);
+
+        return $this;
+    }
+
 }

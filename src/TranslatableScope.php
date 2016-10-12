@@ -81,7 +81,8 @@ class TranslatableScope implements Scope
             $langKey = $model->getLocaleKey();
 
             $join->on($alias . '.' . $foreign, '=', $this->table . '.' . $primary)
-                ->where($alias . '.' . $langKey, '=', $locale);
+                 ->on($alias . '.' . $langKey, '=', DB::connection()->getPdo()->quote($locale));
+
         };
     }
 
