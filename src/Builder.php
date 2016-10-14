@@ -65,29 +65,6 @@ class Builder extends EloquentBuilder
         return false;
     }
 
-    /**
-     * Delete a record from the database.
-     *
-     * @return mixed
-     */
-    public function delete()
-    {
-        if (isset($this->onDelete)) {
-            return call_user_func($this->onDelete, $this);
-        }
-
-        return $this->i18nDeleteQuery()->delete() && $this->toBase()->delete();
-    }
-
-    /**
-     * Run the default delete function on the builder.
-     *
-     * @return mixed
-     */
-    public function forceDelete()
-    {
-        return $this->i18nDeleteQuery(false)->delete() && $this->query->delete();
-    }
 
     /**
      * Filters translatable values from non-translatable.
@@ -164,20 +141,5 @@ class Builder extends EloquentBuilder
         return $query;
     }
 
-    /**
-     * Get the delete query instance for translation table.
-     *
-     * @param bool $withGlobalScopes
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function i18nDeleteQuery($withGlobalScopes = true)
-    {
-        $subQuery = $withGlobalScopes ? $this->toBase() : $this->getQuery();
-        $subQuery->select($this->model->getQualifiedKeyName());
 
-        $query = $this->i18nQuery();
-        $query->whereSubQuery($this->model->getForeignKey(), $subQuery);
-
-        return $query;
-    }
 }
