@@ -93,29 +93,6 @@ class Builder extends EloquentBuilder
         return false;
     }
 
-    /**
-     * Delete a record from the database.
-     *
-     * @return mixed
-     */
-    public function delete()
-    {
-        if (isset($this->onDelete)) {
-            return call_user_func($this->onDelete, $this);
-        }
-
-        return $this->i18nDeleteQuery()->delete() && $this->toBase()->delete();
-    }
-
-    /**
-     * Run the default delete function on the builder.
-     *
-     * @return mixed
-     */
-    public function forceDelete()
-    {
-        return $this->i18nDeleteQuery(false)->delete() && $this->query->delete();
-    }
 
     /**
      * Filters translatable values from non-translatable.
