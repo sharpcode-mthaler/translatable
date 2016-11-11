@@ -42,7 +42,7 @@ trait Translatable
 
         $model->save();
 
-        if(is_array($translations)) {
+        if (is_array($translations)) {
             $model->saveTranslations($translations);
         }
 
@@ -63,7 +63,7 @@ trait Translatable
 
         $model->setLocale($locale)->save();
 
-        if(is_array($translations)) {
+        if (is_array($translations)) {
             $model->saveTranslations($translations);
         }
 
