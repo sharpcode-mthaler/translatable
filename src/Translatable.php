@@ -149,6 +149,7 @@ trait Translatable
                         foreach ($this->translatableAttributes() as $key) {
                             $this->fill([$key => null]);
                         }
+                        $backup=null;
                     }
                 }
             } else {
