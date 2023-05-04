@@ -3,6 +3,7 @@
 namespace Laraplus\Data;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Arr;
 
 trait Translatable
 {
@@ -230,7 +231,7 @@ trait Translatable
             $this->initTranslatableAttributes();
         }
         if (isset($attributes['translations'])) {
-            $attributes = array_except($attributes, $this->translatableAttributes());
+            $attributes = Arr::except($attributes, $this->translatableAttributes());
         }
         return parent::fill($attributes);
     }
