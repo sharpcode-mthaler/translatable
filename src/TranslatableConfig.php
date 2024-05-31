@@ -89,7 +89,7 @@ class TranslatableConfig
         return static::$config['db_settings']['locale_field'];
     }
 
-    public static function cacheSet($table, array $fields)
+    public static function cacheSet($table, ?array $fields)
     {
         static::checkIfSet('cache', 'setter');
 

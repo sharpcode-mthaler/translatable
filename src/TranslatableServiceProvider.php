@@ -18,7 +18,11 @@ class TranslatableServiceProvider extends ServiceProvider
         });
 
         TranslatableConfig::cacheSetter(function ($table, $fields) {
-            return $this->app['cache']->forever('translatable.'.$table, $fields);
+            if (is_null($fields)) {
+                return $this->app['cache']->forget('translatable.' . $table);
+            } else {
+                return $this->app['cache']->forever('translatable.' . $table, $fields);
+            }
         });
 
         TranslatableConfig::currentLocaleGetter(function () {
